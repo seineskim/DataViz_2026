@@ -1,4 +1,4 @@
-key_ID,village,interview_date,no_membrs,years_liv,respondent_wall_type,rooms,memb_assoc,affect_conflicts,liv_count,items_owned,no_meals,months_lack_food
+key_ID,village,interview_date,no_membrs,years_liv,wall_type,rooms,memb_assoc,affect_conflicts,liv_count,items_owned,no_meals,months_lack_food
 1,God,2016-11-17T00:00:00Z,3,4,muddaub,1,NULL,NULL,1,bicycle;television;solar_panel;table,2,Jan
 1,God,2016-11-17T00:00:00Z,7,9,muddaub,1,yes,once,3,cow_cart;bicycle;radio;cow_plough;solar_panel;solar_torch;table;mobile_phone,2,Jan;Sept;Oct;Nov;Dec
 3,God,2016-11-17T00:00:00Z,10,15,burntbricks,1,NULL,NULL,1,solar_torch,2,Jan;Feb;Mar;Oct;Nov;Dec
