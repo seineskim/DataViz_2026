@@ -167,84 +167,30 @@ ggplot(mep_yes_share, aes(x = `EP Group`, y = yes_share)) +
 dev.off()
 
 ############################################################
-# V4. Yes share per year by national party (bar plot)
+# V4. Yes share by national party (EP1, entire period)
 ############################################################
-# Load roll-call metadata to obtain year information
-vote_info <- read_excel("vote_info_Jun2010.xls", sheet = "EP1")
+np_yes <- rcv_ep1_long %>%
+  filter(vote_code %in% c(1, 2, 3)) %>%   # valid votes
+  group_by(NP) %>%
+  summarise(
+    yes_share = mean(vote_code == 1),
+    .groups = "drop"
+  )
 
-vote_info_ep1 <- vote_info %>%
-  filter(`EP No.` == 1) %>%
-  mutate(
-    vote_no = as.integer(`Vote No. in RCV_EP1 file`),
-    # Date is stored as Excel serial number (character)
-    date = as.Date(as.numeric(Date), origin = "1899-12-30"),
-    year = format(date, "%Y")
-  ) %>%
-  select(vote_no, year) %>%
-  filter(!is.na(year))   # drop roll-calls with missing dates
+pdf("viz4_SK.pdf", width = 10, height = 8)
 
-# Merge year onto rcv long data
-rcv_ep1_long_year <- rcv_ep1_long %>%
-  mutate(vote_no = as.integer(sub("^V", "", rollcall_id))) %>%
-  left_join(vote_info_ep1, by = "vote_no")
-
-# Check remaining missing years
-print(sum(is.na(rcv_ep1_long_year$year)))
-
-# Year x NP yes share
-np_year_yes <- rcv_ep1_long_year %>%
-  filter(vote_code %in% c(1, 2, 3)) %>%
-  filter(!is.na(year)) %>%
-  group_by(year, NP) %>%
-  summarise(yes_share = mean(vote_code == 1), .groups = "drop")
-
-# Keep top 10 national parties for readability
-top_np <- np_year_yes %>%
-  count(NP, sort = TRUE) %>%
-  slice_head(n = 10) %>%
-  pull(NP)
-
-np_year_yes_top <- np_year_yes %>%
-  filter(NP %in% top_np)
-
-pdf("viz4_SK.pdf", width = 11, height = 6)
-ggplot(np_year_yes_top, aes(x = year, y = yes_share, fill = factor(NP))) +
-  geom_col(position = "dodge") +
+ggplot(np_yes,
+       aes(x = reorder(NP, yes_share),
+           y = yes_share,
+           fill = NP)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 1)) +
   labs(
-    title = "Yes Share per Year by National Party (Top 10 NP, EP1)",
-    x = "Year",
-    y = "Yes share",
-    fill = "NP"
+    title = "Yes-vote share by national party (EP1)",
+    x = "National party",
+    y = "Yes share"
   ) +
   theme_minimal()
+
 dev.off()
-
-############################################################
-# V5. Average Yes share per year by EP group (line plot)
-############################################################
-# Merge year onto merged dataset (EP Group included)
-rcv_ep1_merged_year <- rcv_ep1_merged %>%
-  mutate(vote_no = as.integer(sub("^V", "", rollcall_id))) %>%
-  left_join(vote_info_ep1, by = "vote_no")
-
-epg_year_yes <- rcv_ep1_merged_year %>%
-  filter(vote_code %in% c(1, 2, 3)) %>%
-  filter(!is.na(year)) %>%
-  group_by(year, `EP Group`) %>%
-  summarise(avg_yes = mean(vote_code == 1), .groups = "drop")
-
-pdf("viz5_SK.pdf", width = 8, height = 5)
-ggplot(epg_year_yes, aes(x = year, y = avg_yes,
-                         group = `EP Group`, color = `EP Group`)) +
-  geom_line() +
-  geom_point() +
-  labs(
-    title = "Average Yes Share per Year by EP Group (EP1)",
-    x = "Year",
-    y = "Average Yes share",
-    color = "EP Group"
-  ) +
-  theme_minimal()
-dev.off()
-
-print(head(epg_year_yes, 20))
