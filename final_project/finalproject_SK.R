@@ -13,7 +13,7 @@ options(
   modelsummary_factory_latex = "kableExtra",
   modelsummary_format_numeric_latex = "plain"
 )
-setwd("/Users/ines/Desktop/School/0_Lecture/2학기/Data Viz/2_assignments/Final project")
+setwd("/Users/ines/Desktop/School/0_Lecture/2학기/Data Viz/DataViz_2026/final_project")
 pdf_device <- "pdf"
 
 # custom theme

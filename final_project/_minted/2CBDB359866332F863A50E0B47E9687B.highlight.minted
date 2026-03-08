@@ -1,0 +1,299 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{rm}\PYG{p}{(}\PYG{n}{list}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{ls}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+
+\PYG{n+nf}{library}\PYG{p}{(}\PYG{n}{dplyr}\PYG{p}{)}
+\PYG{n+nf}{library}\PYG{p}{(}\PYG{n}{ggplot2}\PYG{p}{)}
+\PYG{n+nf}{library}\PYG{p}{(}\PYG{n}{ggrepel}\PYG{p}{)}
+\PYG{n+nf}{library}\PYG{p}{(}\PYG{n}{patchwork}\PYG{p}{)}
+\PYG{n+nf}{library}\PYG{p}{(}\PYG{n}{sf}\PYG{p}{)}
+\PYG{n+nf}{library}\PYG{p}{(}\PYG{n}{tibble}\PYG{p}{)}
+\PYG{n+nf}{library}\PYG{p}{(}\PYG{n}{modelsummary}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} env}
+\PYG{n+nf}{options}\PYG{p}{(}
+\PYG{+w}{  }\PYG{n}{modelsummary\PYGZus{}factory\PYGZus{}latex}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{kableExtra\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{n}{modelsummary\PYGZus{}format\PYGZus{}numeric\PYGZus{}latex}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{plain\PYGZdq{}}
+\PYG{p}{)}
+\PYG{n+nf}{setwd}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{/Users/ines/Desktop/School/0\PYGZus{}Lecture/2학기/Data Viz/DataViz\PYGZus{}2026/final\PYGZus{}project\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{pdf\PYGZus{}device}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{pdf\PYGZdq{}}
+
+\PYG{c+c1}{\PYGZsh{} custom theme}
+\PYG{n}{my\PYGZus{}custom\PYGZus{}theme}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{k+kr}{function}\PYG{p}{(}\PYG{n}{base\PYGZus{}size}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{11}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{base\PYGZus{}family}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{sans\PYGZdq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{  }\PYG{n+nf}{theme\PYGZus{}minimal}\PYG{p}{(}\PYG{n}{base\PYGZus{}size}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{base\PYGZus{}size}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{base\PYGZus{}family}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{base\PYGZus{}family}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZpc{}+replace\PYGZpc{}}
+\PYG{+w}{    }\PYG{n+nf}{theme}\PYG{p}{(}
+\PYG{+w}{      }\PYG{n}{text}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{element\PYGZus{}text}\PYG{p}{(}\PYG{n}{family}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{base\PYGZus{}family}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n}{plot.background}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{element\PYGZus{}rect}\PYG{p}{(}\PYG{n}{fill}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{white\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{colour}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kc}{NA}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n}{panel.background}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{element\PYGZus{}rect}\PYG{p}{(}\PYG{n}{fill}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{white\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{colour}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kc}{NA}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n}{panel.grid.major}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{element\PYGZus{}line}\PYG{p}{(}\PYG{n}{colour}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{grey90\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{linewidth}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0.35}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n}{panel.grid.minor}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{element\PYGZus{}blank}\PYG{p}{(}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n}{axis.ticks}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{element\PYGZus{}blank}\PYG{p}{(}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n}{axis.text}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{element\PYGZus{}text}\PYG{p}{(}\PYG{n}{colour}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{grey20\PYGZdq{}}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n}{plot.title}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{element\PYGZus{}text}\PYG{p}{(}\PYG{n}{face}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{bold\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{size}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{base\PYGZus{}size}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m}{4}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{hjust}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n}{plot.subtitle}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{element\PYGZus{}text}\PYG{p}{(}\PYG{n}{size}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{base\PYGZus{}size}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m}{1}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{colour}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{grey30\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{hjust}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{margin}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{margin}\PYG{p}{(}\PYG{n}{t}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{6}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{b}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{8}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n}{plot.caption}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{element\PYGZus{}text}\PYG{p}{(}\PYG{n}{size}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{base\PYGZus{}size}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+m}{1}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{colour}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{grey45\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{hjust}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{1}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n}{legend.position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{top\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n}{legend.title}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{element\PYGZus{}text}\PYG{p}{(}\PYG{n}{face}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{bold\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{colour}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{grey20\PYGZdq{}}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n}{legend.text}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{element\PYGZus{}text}\PYG{p}{(}\PYG{n}{family}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{base\PYGZus{}family}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{size}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{base\PYGZus{}size}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+m}{1}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{lineheight}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{1.1}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{)}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{n+nf}{theme\PYGZus{}set}\PYG{p}{(}\PYG{n+nf}{my\PYGZus{}custom\PYGZus{}theme}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} legend labels}
+\PYG{n}{indicator\PYGZus{}legend\PYGZus{}labels}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{c}\PYG{p}{(}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Total fertility rate index (2015 = 100)\PYGZbs{}nTFR = 5 x sum of ASFR (ages 15\PYGZhy{}49)\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Crude marriage rate index (2015 = 100)\PYGZbs{}n(Marriages / mid\PYGZhy{}year population) x 1,000\PYGZdq{}}
+\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} region mapping kr\PYGZhy{}en}
+\PYG{n}{region\PYGZus{}map\PYGZus{}kr\PYGZus{}to\PYGZus{}eng}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{c}\PYG{p}{(}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{서울특별시\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Seoul\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{부산광역시\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Busan\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{대구광역시\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Daegu\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{인천광역시\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Incheon\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{광주광역시\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Gwangju\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{대전광역시\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Daejeon\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{울산광역시\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Ulsan\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{세종특별자치시\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Sejong\PYGZhy{}si\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{경기도\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Gyeonggi\PYGZhy{}do\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{강원특별자치도\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Gangwon\PYGZhy{}do\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{충청북도\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Chungcheongbuk\PYGZhy{}do\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{충청남도\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Chungcheongnam\PYGZhy{}do\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{전북특별자치도\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Jeollabuk\PYGZhy{}do\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{전라북도\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Jeollabuk\PYGZhy{}do\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{전라남도\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Jellanam\PYGZhy{}do\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{경상북도\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Gyeongsangbuk\PYGZhy{}do\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{경상남도\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Gyeongsangnam\PYGZhy{}do\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{제주특별자치도\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Jeju\PYGZhy{}do\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{제주도\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Jeju\PYGZhy{}do\PYGZdq{}}
+\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{c+c1}{\PYGZsh{} shared prep \PYGZhy{} provincial fertility and youth structure}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{n}{raw}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{read.csv}\PYG{p}{(}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Total\PYGZus{}Fertility\PYGZus{}Rates\PYGZus{}and\PYGZus{}AgeSpecific\PYGZus{}Fertility\PYGZus{}Rates\PYGZus{}for\PYGZus{}Provinces.csv\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{  }\PYG{n}{header}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kc}{FALSE}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{check.names}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kc}{FALSE}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{stringsAsFactors}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kc}{FALSE}
+\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} tfr cols: 2015(2), 2024(74)}
+\PYG{n}{tfr\PYGZus{}10y}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{setNames}\PYG{p}{(}\PYG{n}{raw}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n+nf}{c}\PYG{p}{(}\PYG{l+m}{1}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{2}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nf}{c}\PYG{p}{(}\PYG{l+m}{1}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{2}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{74}\PYG{p}{)}\PYG{p}{]}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nf}{c}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{province\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{tfr\PYGZus{}2015\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{tfr\PYGZus{}2024\PYGZdq{}}\PYG{p}{)}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{as\PYGZus{}tibble}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{mutate}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n}{province}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{trimws}\PYG{p}{(}\PYG{n+nf}{as.character}\PYG{p}{(}\PYG{n}{province}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{tfr\PYGZus{}2015}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{as.numeric}\PYG{p}{(}\PYG{n}{tfr\PYGZus{}2015}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{tfr\PYGZus{}2024}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{as.numeric}\PYG{p}{(}\PYG{n}{tfr\PYGZus{}2024}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{)}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{filter}\PYG{p}{(}\PYG{o}{!}\PYG{n+nf}{is.na}\PYG{p}{(}\PYG{n}{province}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{province}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{o}{!}\PYG{n+nf}{is.na}\PYG{p}{(}\PYG{n}{tfr\PYGZus{}2015}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{o}{!}\PYG{n+nf}{is.na}\PYG{p}{(}\PYG{n}{tfr\PYGZus{}2024}\PYG{p}{)}\PYG{p}{)}
+
+\PYG{n}{tfr\PYGZus{}region\PYGZus{}2024}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n}{tfr\PYGZus{}10y}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{filter}\PYG{p}{(}\PYG{n}{province}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Whole country\PYGZdq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{mutate}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n}{CTP\PYGZus{}ENG\PYGZus{}NM}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{case\PYGZus{}when}\PYG{p}{(}
+\PYG{+w}{      }\PYG{n}{province}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Sejong\PYGZdq{}}\PYG{+w}{ }\PYG{o}{\PYGZti{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Sejong\PYGZhy{}si\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n}{province}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Jeju\PYGZdq{}}\PYG{+w}{ }\PYG{o}{\PYGZti{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Jeju\PYGZhy{}do\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n}{province}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Jeollanam\PYGZhy{}do\PYGZdq{}}\PYG{+w}{ }\PYG{o}{\PYGZti{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Jellanam\PYGZhy{}do\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{      }\PYG{k+kc}{TRUE}\PYG{+w}{ }\PYG{o}{\PYGZti{}}\PYG{+w}{ }\PYG{n}{province}
+\PYG{+w}{    }\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{)}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{transmute}\PYG{p}{(}\PYG{n}{province}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{CTP\PYGZus{}ENG\PYGZus{}NM}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tfr\PYGZus{}2024}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} optional provincial change table data}
+\PYG{n}{provincial\PYGZus{}change\PYGZus{}data}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n}{tfr\PYGZus{}10y}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{filter}\PYG{p}{(}\PYG{n}{province}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Whole country\PYGZdq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{transmute}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n}{tfr\PYGZus{}2015}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{tfr\PYGZus{}2024}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{fertility\PYGZus{}drop}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{tfr\PYGZus{}2015}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{n}{tfr\PYGZus{}2024}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{fertility\PYGZus{}drop\PYGZus{}pct}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{p}{(}\PYG{n}{tfr\PYGZus{}2024}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{n}{tfr\PYGZus{}2015}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{/}\PYG{+w}{ }\PYG{n}{tfr\PYGZus{}2015}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m}{100}
+\PYG{+w}{  }\PYG{p}{)}
+
+\PYG{n}{pop\PYGZus{}raw}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{read.csv}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{korea\PYGZhy{}population\PYGZus{}2024.csv\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{check.names}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kc}{FALSE}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{stringsAsFactors}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kc}{FALSE}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{fileEncoding}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{UTF\PYGZhy{}8\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{col\PYGZus{}region}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{names}\PYG{p}{(}\PYG{n}{pop\PYGZus{}raw}\PYG{p}{)}\PYG{p}{[}\PYG{l+m}{1}\PYG{p}{]}
+\PYG{n}{col\PYGZus{}sex}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{names}\PYG{p}{(}\PYG{n}{pop\PYGZus{}raw}\PYG{p}{)}\PYG{p}{[}\PYG{l+m}{2}\PYG{p}{]}
+\PYG{n}{col\PYGZus{}age}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{names}\PYG{p}{(}\PYG{n}{pop\PYGZus{}raw}\PYG{p}{)}\PYG{p}{[}\PYG{l+m}{3}\PYG{p}{]}
+\PYG{n}{col\PYGZus{}value}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{names}\PYG{p}{(}\PYG{n}{pop\PYGZus{}raw}\PYG{p}{)}\PYG{p}{[}\PYG{l+m}{4}\PYG{p}{]}
+
+\PYG{n}{pop\PYGZus{}total}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n}{pop\PYGZus{}raw}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{filter}\PYG{p}{(}\PYG{n}{.data}\PYG{p}{[[}\PYG{n}{col\PYGZus{}sex}\PYG{p}{]]}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{계\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{.data}\PYG{p}{[[}\PYG{n}{col\PYGZus{}age}\PYG{p}{]]}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{계\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{.data}\PYG{p}{[[}\PYG{n}{col\PYGZus{}region}\PYG{p}{]]}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{전국\PYGZdq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{transmute}\PYG{p}{(}\PYG{n}{region\PYGZus{}kr}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{.data}\PYG{p}{[[}\PYG{n}{col\PYGZus{}region}\PYG{p}{]]}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{total\PYGZus{}pop}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{as.numeric}\PYG{p}{(}\PYG{n}{.data}\PYG{p}{[[}\PYG{n}{col\PYGZus{}value}\PYG{p}{]]}\PYG{p}{)}\PYG{p}{)}
+
+\PYG{n}{pop\PYGZus{}youth}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n}{pop\PYGZus{}raw}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{filter}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n}{.data}\PYG{p}{[[}\PYG{n}{col\PYGZus{}sex}\PYG{p}{]]}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{계\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{.data}\PYG{p}{[[}\PYG{n}{col\PYGZus{}age}\PYG{p}{]]}\PYG{+w}{ }\PYG{o}{\PYGZpc{}in\PYGZpc{}}\PYG{+w}{ }\PYG{n+nf}{c}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{20 \PYGZhy{} 24세\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{25 \PYGZhy{} 29세\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{30 \PYGZhy{} 34세\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{35 \PYGZhy{} 39세\PYGZdq{}}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{.data}\PYG{p}{[[}\PYG{n}{col\PYGZus{}region}\PYG{p}{]]}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{전국\PYGZdq{}}
+\PYG{+w}{  }\PYG{p}{)}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{group\PYGZus{}by}\PYG{p}{(}\PYG{n}{region\PYGZus{}kr}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{.data}\PYG{p}{[[}\PYG{n}{col\PYGZus{}region}\PYG{p}{]]}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{summarise}\PYG{p}{(}\PYG{n}{youth\PYGZus{}pop}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{sum}\PYG{p}{(}\PYG{n+nf}{as.numeric}\PYG{p}{(}\PYG{n}{.data}\PYG{p}{[[}\PYG{n}{col\PYGZus{}value}\PYG{p}{]]}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{na.rm}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kc}{TRUE}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{.groups}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{drop\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n}{pop\PYGZus{}share}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n}{pop\PYGZus{}total}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{left\PYGZus{}join}\PYG{p}{(}\PYG{n}{pop\PYGZus{}youth}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{by}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{region\PYGZus{}kr\PYGZdq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{mutate}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n}{youth\PYGZus{}share}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{youth\PYGZus{}pop}\PYG{+w}{ }\PYG{o}{/}\PYG{+w}{ }\PYG{n}{total\PYGZus{}pop}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m}{100}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{CTP\PYGZus{}ENG\PYGZus{}NM}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{unname}\PYG{p}{(}\PYG{n}{region\PYGZus{}map\PYGZus{}kr\PYGZus{}to\PYGZus{}eng}\PYG{p}{[}\PYG{n}{region\PYGZus{}kr}\PYG{p}{]}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{)}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{select}\PYG{p}{(}\PYG{n}{CTP\PYGZus{}ENG\PYGZus{}NM}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{youth\PYGZus{}share}\PYG{p}{)}
+
+\PYG{n+nf}{stopifnot}\PYG{p}{(}\PYG{o}{!}\PYG{n+nf}{any}\PYG{p}{(}\PYG{n+nf}{is.na}\PYG{p}{(}\PYG{n}{pop\PYGZus{}share}\PYG{o}{\PYGZdl{}}\PYG{n}{CTP\PYGZus{}ENG\PYGZus{}NM}\PYG{p}{)}\PYG{p}{)}\PYG{p}{)}
+
+\PYG{n}{regional\PYGZus{}data}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n}{tfr\PYGZus{}region\PYGZus{}2024}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{left\PYGZus{}join}\PYG{p}{(}\PYG{n}{pop\PYGZus{}share}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{by}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{CTP\PYGZus{}ENG\PYGZus{}NM\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n+nf}{stopifnot}\PYG{p}{(}\PYG{o}{!}\PYG{n+nf}{any}\PYG{p}{(}\PYG{n+nf}{is.na}\PYG{p}{(}\PYG{n}{regional\PYGZus{}data}\PYG{o}{\PYGZdl{}}\PYG{n}{tfr\PYGZus{}2024}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{o}{!}\PYG{n+nf}{any}\PYG{p}{(}\PYG{n+nf}{is.na}\PYG{p}{(}\PYG{n}{regional\PYGZus{}data}\PYG{o}{\PYGZdl{}}\PYG{n}{youth\PYGZus{}share}\PYG{p}{)}\PYG{p}{)}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{c+c1}{\PYGZsh{} fig 1 \PYGZhy{} pattern: spatial mismatch map}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{n}{korea\PYGZus{}map}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{st\PYGZus{}read}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{koreamap.shp\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{options}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{ENCODING=CP949\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{quiet}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kc}{TRUE}\PYG{p}{)}
+
+\PYG{n}{map\PYGZus{}youth}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n}{korea\PYGZus{}map}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{left\PYGZus{}join}\PYG{p}{(}\PYG{n}{regional\PYGZus{}data}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}\PYG{+w}{ }\PYG{n+nf}{select}\PYG{p}{(}\PYG{n}{CTP\PYGZus{}ENG\PYGZus{}NM}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{youth\PYGZus{}share}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{by}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{CTP\PYGZus{}ENG\PYGZus{}NM\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n}{map\PYGZus{}tfr}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n}{korea\PYGZus{}map}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{left\PYGZus{}join}\PYG{p}{(}\PYG{n}{regional\PYGZus{}data}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}\PYG{+w}{ }\PYG{n+nf}{select}\PYG{p}{(}\PYG{n}{CTP\PYGZus{}ENG\PYGZus{}NM}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tfr\PYGZus{}2024}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{by}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{CTP\PYGZus{}ENG\PYGZus{}NM\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n}{map\PYGZus{}panel\PYGZus{}theme}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{theme\PYGZus{}void}\PYG{p}{(}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{theme}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n}{plot.title}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{element\PYGZus{}text}\PYG{p}{(}\PYG{n}{face}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{bold\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{size}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{12}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{hjust}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{plot.subtitle}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{element\PYGZus{}text}\PYG{p}{(}\PYG{n}{size}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{10}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{hjust}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{legend.position}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{bottom\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{legend.key.width}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{grid}\PYG{o}{::}\PYG{n+nf}{unit}\PYG{p}{(}\PYG{l+m}{1.4}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{cm\PYGZdq{}}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{)}
+
+\PYG{n}{figure1\PYGZus{}left}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{ggplot}\PYG{p}{(}\PYG{n}{map\PYGZus{}youth}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{geom\PYGZus{}sf}\PYG{p}{(}\PYG{n+nf}{aes}\PYG{p}{(}\PYG{n}{fill}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{youth\PYGZus{}share}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{white\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{linewidth}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0.35}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{scale\PYGZus{}fill\PYGZus{}gradientn}\PYG{p}{(}\PYG{n}{colors}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{c}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZsh{}E8F1FA\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZsh{}90CAF9\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZsh{}1565C0\PYGZdq{}}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{name}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Youth share (\PYGZpc{})\PYGZdq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{labs}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n}{title}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Youth Population Share (Age 20\PYGZhy{}39), 2024\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{subtitle}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Share of total regional population\PYGZdq{}}
+\PYG{+w}{  }\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n}{map\PYGZus{}panel\PYGZus{}theme}
+
+\PYG{n}{figure1\PYGZus{}right}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{ggplot}\PYG{p}{(}\PYG{n}{map\PYGZus{}tfr}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{geom\PYGZus{}sf}\PYG{p}{(}\PYG{n+nf}{aes}\PYG{p}{(}\PYG{n}{fill}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{tfr\PYGZus{}2024}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{white\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{linewidth}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0.35}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{scale\PYGZus{}fill\PYGZus{}gradientn}\PYG{p}{(}\PYG{n}{colors}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{c}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZsh{}FFF3E0\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZsh{}FFB74D\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZsh{}E65100\PYGZdq{}}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{name}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{TFR (2024)\PYGZdq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{labs}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n}{title}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Total Fertility Rate by Region, 2024\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{subtitle}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Births per woman\PYGZdq{}}
+\PYG{+w}{  }\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n}{map\PYGZus{}panel\PYGZus{}theme}
+
+\PYG{n}{figure1}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{figure1\PYGZus{}left}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{figure1\PYGZus{}right}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n+nf}{plot\PYGZus{}layout}\PYG{p}{(}\PYG{n}{ncol}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{2}\PYG{p}{)}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{plot\PYGZus{}annotation}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n}{title}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Figure 1. Spatial Mismatch Between Youth Concentration and Fertility in Korea\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{subtitle}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Regions with larger young\PYGZhy{}adult populations do not necessarily show higher fertility levels in 2024.\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{caption}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Source: Population Statistics and KOSIS Fertility Statistics (2024)\PYGZdq{}}
+\PYG{+w}{  }\PYG{p}{)}
+
+\PYG{n+nf}{ggsave}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{fig1.pdf\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{figure1}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{device}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{pdf\PYGZus{}device}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{width}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{13}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{height}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{6.8}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{units}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{in\PYGZdq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{c+c1}{\PYGZsh{} fig 2 \PYGZhy{} verification: scatter with regression}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{n}{plot2\PYGZus{}data}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n}{regional\PYGZus{}data}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{transmute}\PYG{p}{(}\PYG{n}{province}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{youth\PYGZus{}share}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tfr\PYGZus{}2024}\PYG{p}{)}
+
+\PYG{n}{cor\PYGZus{}val}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{cor}\PYG{p}{(}\PYG{n}{plot2\PYGZus{}data}\PYG{o}{\PYGZdl{}}\PYG{n}{youth\PYGZus{}share}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{plot2\PYGZus{}data}\PYG{o}{\PYGZdl{}}\PYG{n}{tfr\PYGZus{}2024}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{use}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{complete.obs\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n}{figure2}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{ggplot}\PYG{p}{(}\PYG{n}{plot2\PYGZus{}data}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nf}{aes}\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{youth\PYGZus{}share}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{y}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{tfr\PYGZus{}2024}\PYG{p}{)}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{geom\PYGZus{}point}\PYG{p}{(}\PYG{n}{size}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{3}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZsh{}00897B\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{alpha}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0.9}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{geom\PYGZus{}smooth}\PYG{p}{(}\PYG{n}{method}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{lm\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{se}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kc}{TRUE}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZsh{}1E88E5\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{linewidth}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{1.2}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n}{ggrepel}\PYG{o}{::}\PYG{n+nf}{geom\PYGZus{}text\PYGZus{}repel}\PYG{p}{(}\PYG{n+nf}{aes}\PYG{p}{(}\PYG{n}{label}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{province}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{size}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{2.8}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{grey25\PYGZdq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{labs}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n}{title}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Figure 2. Youth Population Share and Regional Fertility Levels in 2024\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{subtitle}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Cross\PYGZhy{}sectional relationship between youth population share and TFR in 2024\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Youth population share (20\PYGZhy{}39, \PYGZpc{})\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{y}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Total fertility rate (2024)\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{caption}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Source: Population Statistics and KOSIS Fertility Statistics (2024) | Pearson correlation: \PYGZpc{}.3f | Line: OLS fit with 95\PYGZpc{}\PYGZpc{} CI\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{cor\PYGZus{}val}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{)}
+
+\PYG{n+nf}{ggsave}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{fig2.pdf\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{figure2}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{device}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{pdf\PYGZus{}device}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{width}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{10}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{height}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{6.8}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{units}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{in\PYGZdq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{c+c1}{\PYGZsh{} fig 3 \PYGZhy{} mechanism: national marriage \PYGZam{} fertility trends}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{n}{vital\PYGZus{}raw}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{read.csv}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Vital\PYGZus{}Statistics\PYGZus{}of\PYGZus{}Korea.csv\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{header}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kc}{FALSE}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{check.names}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kc}{FALSE}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{stringsAsFactors}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kc}{FALSE}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} rebase indices (2015=100)}
+\PYG{n}{figure3\PYGZus{}data}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{tibble}\PYG{p}{(}
+\PYG{+w}{  }\PYG{n}{year}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{as.integer}\PYG{p}{(}\PYG{n+nf}{unlist}\PYG{p}{(}\PYG{n}{vital\PYGZus{}raw}\PYG{p}{[}\PYG{l+m}{1}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{2}\PYG{o}{:}\PYG{l+m}{11}\PYG{p}{]}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{  }\PYG{n}{fertility\PYGZus{}rate}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{as.numeric}\PYG{p}{(}\PYG{n+nf}{unlist}\PYG{p}{(}\PYG{n}{vital\PYGZus{}raw}\PYG{p}{[}\PYG{l+m}{8}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{2}\PYG{o}{:}\PYG{l+m}{11}\PYG{p}{]}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{  }\PYG{n}{marriage\PYGZus{}rate}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{as.numeric}\PYG{p}{(}\PYG{n+nf}{unlist}\PYG{p}{(}\PYG{n}{vital\PYGZus{}raw}\PYG{p}{[}\PYG{l+m}{12}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m}{2}\PYG{o}{:}\PYG{l+m}{11}\PYG{p}{]}\PYG{p}{)}\PYG{p}{)}
+\PYG{p}{)}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}
+\PYG{+w}{  }\PYG{n+nf}{mutate}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n}{fertility\PYGZus{}index}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{fertility\PYGZus{}rate}\PYG{+w}{ }\PYG{o}{/}\PYG{+w}{ }\PYG{n+nf}{first}\PYG{p}{(}\PYG{n}{fertility\PYGZus{}rate}\PYG{p}{)}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m}{100}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{marriage\PYGZus{}index}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{marriage\PYGZus{}rate}\PYG{+w}{ }\PYG{o}{/}\PYG{+w}{ }\PYG{n+nf}{first}\PYG{p}{(}\PYG{n}{marriage\PYGZus{}rate}\PYG{p}{)}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m}{100}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{band\PYGZus{}low}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{pmin}\PYG{p}{(}\PYG{n}{fertility\PYGZus{}index}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{marriage\PYGZus{}index}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{band\PYGZus{}high}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{pmax}\PYG{p}{(}\PYG{n}{fertility\PYGZus{}index}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{marriage\PYGZus{}index}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{)}
+
+\PYG{n}{fertility\PYGZus{}change\PYGZus{}10y}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nf}{last}\PYG{p}{(}\PYG{n}{figure3\PYGZus{}data}\PYG{o}{\PYGZdl{}}\PYG{n}{fertility\PYGZus{}rate}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{/}\PYG{+w}{ }\PYG{n+nf}{first}\PYG{p}{(}\PYG{n}{figure3\PYGZus{}data}\PYG{o}{\PYGZdl{}}\PYG{n}{fertility\PYGZus{}rate}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+m}{1}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m}{100}
+\PYG{n}{marriage\PYGZus{}change\PYGZus{}10y}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nf}{last}\PYG{p}{(}\PYG{n}{figure3\PYGZus{}data}\PYG{o}{\PYGZdl{}}\PYG{n}{marriage\PYGZus{}rate}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{/}\PYG{+w}{ }\PYG{n+nf}{first}\PYG{p}{(}\PYG{n}{figure3\PYGZus{}data}\PYG{o}{\PYGZdl{}}\PYG{n}{marriage\PYGZus{}rate}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+m}{1}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{l+m}{100}
+
+\PYG{n}{figure3}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{ggplot}\PYG{p}{(}\PYG{n}{figure3\PYGZus{}data}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nf}{aes}\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{year}\PYG{p}{)}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{geom\PYGZus{}ribbon}\PYG{p}{(}\PYG{n+nf}{aes}\PYG{p}{(}\PYG{n}{ymin}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{band\PYGZus{}low}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{ymax}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{band\PYGZus{}high}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{fill}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Gap between series\PYGZdq{}}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{alpha}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0.8}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{geom\PYGZus{}line}\PYG{p}{(}\PYG{n+nf}{aes}\PYG{p}{(}\PYG{n}{y}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{fertility\PYGZus{}index}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Total fertility rate\PYGZdq{}}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{linewidth}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{1.3}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{geom\PYGZus{}line}\PYG{p}{(}\PYG{n+nf}{aes}\PYG{p}{(}\PYG{n}{y}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{marriage\PYGZus{}index}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Crude marriage rate\PYGZdq{}}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{linewidth}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{1.3}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{geom\PYGZus{}point}\PYG{p}{(}\PYG{n+nf}{aes}\PYG{p}{(}\PYG{n}{y}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{fertility\PYGZus{}index}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Total fertility rate\PYGZdq{}}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{size}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{2.2}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{geom\PYGZus{}point}\PYG{p}{(}\PYG{n+nf}{aes}\PYG{p}{(}\PYG{n}{y}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{marriage\PYGZus{}index}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Crude marriage rate\PYGZdq{}}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{size}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{2.2}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{geom\PYGZus{}text}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n+nf}{aes}\PYG{p}{(}\PYG{n}{y}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{fertility\PYGZus{}index}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{label}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZpc{}.3f\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{fertility\PYGZus{}rate}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZsh{}426f87\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{size}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{2.7}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{vjust}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{\PYGZhy{}1}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{show.legend}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kc}{FALSE}
+\PYG{+w}{  }\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{geom\PYGZus{}text}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n+nf}{aes}\PYG{p}{(}\PYG{n}{y}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{marriage\PYGZus{}index}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{label}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZpc{}.1f\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{marriage\PYGZus{}rate}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZsh{}487571\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{size}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{2.7}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{vjust}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{2}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{show.legend}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k+kc}{FALSE}
+\PYG{+w}{  }\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{scale\PYGZus{}color\PYGZus{}manual}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n}{name}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{values}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{c}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Total fertility rate\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZsh{}0288D1\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Crude marriage rate\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZsh{}26A69A\PYGZdq{}}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{breaks}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{c}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Total fertility rate\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Crude marriage rate\PYGZdq{}}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{labels}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{indicator\PYGZus{}legend\PYGZus{}labels}
+\PYG{+w}{  }\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{scale\PYGZus{}fill\PYGZus{}manual}\PYG{p}{(}\PYG{n}{name}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{values}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{c}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Gap between series\PYGZdq{}}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZsh{}ECEFF1\PYGZdq{}}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{breaks}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Gap between series\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{labels}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Gap between two index series\PYGZdq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{guides}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n}{color}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{guide\PYGZus{}legend}\PYG{p}{(}\PYG{n}{order}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{1}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{override.aes}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{list}\PYG{p}{(}\PYG{n}{linewidth}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{1.3}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{size}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{3}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{fill}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{guide\PYGZus{}legend}\PYG{p}{(}\PYG{n}{order}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{2}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{scale\PYGZus{}x\PYGZus{}continuous}\PYG{p}{(}\PYG{n}{breaks}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{figure3\PYGZus{}data}\PYG{o}{\PYGZdl{}}\PYG{n}{year}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}
+\PYG{+w}{  }\PYG{n+nf}{labs}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n}{title}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Figure 3. Marriage Rates Declined Faster Than Fertility in Korea\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{subtitle}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{National trend indices rebased to 2015 = 100\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Year\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{y}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Index (2015 = 100)\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n}{caption}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nf}{paste0}\PYG{p}{(}
+\PYG{+w}{      }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Source: Vital Statistics of Korea | Marriage change (2015\PYGZhy{}2024): \PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nf}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZpc{}+.1f\PYGZpc{}\PYGZpc{}\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{marriage\PYGZus{}change\PYGZus{}10y}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{      }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{ | Fertility change (2015\PYGZhy{}2024): \PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nf}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZpc{}+.1f\PYGZpc{}\PYGZpc{}\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{fertility\PYGZus{}change\PYGZus{}10y}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{)}
+
+\PYG{n+nf}{ggsave}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{fig3.pdf\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{figure3}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{device}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{pdf\PYGZus{}device}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{width}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{10}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{height}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{6.5}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{units}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{in\PYGZdq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{c+c1}{\PYGZsh{} latex tables}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{n}{print\PYGZus{}latex\PYGZus{}skim}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{k+kr}{function}\PYG{p}{(}\PYG{n}{df}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{title}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{  }\PYG{n}{tex\PYGZus{}out}\PYG{+w}{ }\PYG{o}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n+nf}{capture.output}\PYG{p}{(}\PYG{n+nf}{datasummary\PYGZus{}skim}\PYG{p}{(}\PYG{n}{df}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{output}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{latex\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{fmt}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{2}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{type}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{numeric\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{title}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{title}\PYG{p}{)}\PYG{p}{)}
+\PYG{+w}{  }\PYG{n+nf}{cat}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZbs{}n\PYGZpc{} \PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{title}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZbs{}n\PYGZdq{}}\PYG{p}{)}
+\PYG{+w}{  }\PYG{n+nf}{cat}\PYG{p}{(}\PYG{n+nf}{paste}\PYG{p}{(}\PYG{n}{tex\PYGZus{}out}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{collapse}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZbs{}n\PYGZdq{}}\PYG{p}{)}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{\PYGZbs{}n\PYGZbs{}n\PYGZdq{}}\PYG{p}{)}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+c1}{\PYGZsh{} summary 1: regional youth share and TFR}
+\PYG{n+nf}{print\PYGZus{}latex\PYGZus{}skim}\PYG{p}{(}
+\PYG{+w}{  }\PYG{n}{regional\PYGZus{}data}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}\PYG{+w}{ }\PYG{n+nf}{transmute}\PYG{p}{(}\PYG{n}{youth\PYGZus{}share}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{tfr\PYGZus{}2024}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Descriptive Statistics: Regional Youth Share and TFR (2024)\PYGZdq{}}
+\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} summary 2: national marriage/fertility time series}
+\PYG{n+nf}{print\PYGZus{}latex\PYGZus{}skim}\PYG{p}{(}
+\PYG{+w}{  }\PYG{n}{figure3\PYGZus{}data}\PYG{+w}{ }\PYG{o}{|\PYGZgt{}}\PYG{+w}{ }\PYG{n+nf}{transmute}\PYG{p}{(}\PYG{n}{fertility\PYGZus{}rate}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{marriage\PYGZus{}rate}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{fertility\PYGZus{}index}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{marriage\PYGZus{}index}\PYG{p}{)}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Descriptive Statistics: National Marriage and Fertility Time\PYGZhy{}Series\PYGZdq{}}
+\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} summary 3: optional provincial fertility change}
+\PYG{n+nf}{print\PYGZus{}latex\PYGZus{}skim}\PYG{p}{(}
+\PYG{+w}{  }\PYG{n}{provincial\PYGZus{}change\PYGZus{}data}\PYG{p}{,}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}}\PYG{l+s}{Descriptive Statistics: Provincial Fertility Change\PYGZdq{}}
+\PYG{p}{)}
+\end{MintedVerbatim}
